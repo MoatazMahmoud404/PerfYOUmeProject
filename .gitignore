@@ -1,0 +1,15 @@
+
+Query/TablesQuery.sql
+Query/TablesQueryV2.sql
+Query/test.py
+Query/ToFallDB.sql
+static/styles.css
+templates/admin_dashboard.html
+templates/chat.html
+templates/create_account.html
+templates/dashboard.html
+templates/index.html
+templates/login.html
+templates/questionnaire.html
+templates/recommendations.html
+templates/signup.html
