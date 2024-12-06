@@ -65,7 +65,7 @@ def signup():
   
     db.session.add(new_user)
     db.session.commit()
-    return jsonify({"message": "Account created successful"}), 200
+    return jsonify({"message": "Account created successful"}), 201
 
 
 @app.route('/login', methods=['POST'])
@@ -85,6 +85,32 @@ def login():
                                        "id": account.account_Id, "username": account.username, "role": role.role_Name}, expires_delta=expires_in)
     return jsonify({"message": "Login successful", "access_token": access_token}), 200
 
+#BY Ahmed Farahat
+@app.route('/Account/reset-password', methods=['PUT'])
+@jwt_required()
+def resetpaswword():
+     current_user = get_jwt_identity()
+     id=current_user['id']
+     if id is None:
+         return jsonify({"message": "Invalid user"}), 401
+     account = Accounts.query.filter_by(account_Id=id).first()
+     data = request.get_json()
+     oldPassword = data.get('oldPassword')
+     newPassword = data.get('newPassword')
+
+     if(oldPassword==newPassword):
+        return jsonify({"message": "THAT IS THE SAME PASSWORD"}), 400
+
+     if not account or not bcrypt.check_password_hash(account.password, oldPassword):
+            return jsonify({"message": "Invalid password"}), 401
+     
+     data=request.get_json()
+     password_pattern = r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+={}\[\]:;"\'<>,.?/-])[A-Za-z\d!@#$%^&*()_+={}\[\]:;"\'<>,.?/-]{8,}$'
+     if re.match(password_pattern,newPassword) is None:
+        return jsonify({"message": "Invalid password please enter following pattern  Password must be at least 8 characters long, include at least one letter, one number, and one special character." }), 400
+     account.password=bcrypt.generate_password_hash(newPassword).decode('utf-8')
+     db.session.commit()
+     return jsonify({"message": "Password updated successfully"}), 200  
 
 if __name__ == '__main__':
     app.run(debug=True)
