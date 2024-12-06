@@ -8,6 +8,7 @@ from sqlalchemy import text
 from datetime import timedelta
 import config
 import re
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -83,7 +84,7 @@ def login():
     expires_in = timedelta(hours=12)
     access_token = create_access_token(identity={
                                        "id": account.account_Id, "username": account.username, "role": role.role_Name}, expires_delta=expires_in)
-    return jsonify({"message": "Login successful", "access_token": access_token}), 200
+    return jsonify({"message": "Login successful", "access_token": access_token}), 201
 
 #BY Ahmed Farahat
 @app.route('/Account/reset-password', methods=['PUT'])
@@ -112,5 +113,39 @@ def resetpaswword():
      db.session.commit()
      return jsonify({"message": "Password updated successfully"}), 200  
 
+
+@app.route('/Account/change-username', methods=['PUT'])
+@jwt_required()
+def change_username():
+    current_user_id = get_jwt_identity()['id']
+    data = request.get_json()
+ 
+    new_username = str(data.get('newUsername', '')).strip()
+ 
+    if new_username == '':
+        return jsonify({"message": "Username cannot be empty"}), 400
+ 
+    existing_user = Accounts.query.filter_by(username=new_username).first()
+    if existing_user:
+        return jsonify({"message": "Username already exists"}), 400
+ 
+    user = Accounts.query.get(current_user_id)
+    if not user:
+        return jsonify({"message": "User not found"}), 404
+ 
+    updatedAt = user.updatedAt
+    if not updatedAt:
+        return jsonify({"message": "Registration date not found"}), 400
+ 
+    current_date = datetime.utcnow()
+    days_since_registration = (current_date - updatedAt).days
+ 
+    if days_since_registration < 60:
+        return jsonify({"message": "You must be registered for at least 60 days to change your username"}), 400
+    user.username = new_username
+    user.updatedAt=current_date
+    db.session.commit()
+    return jsonify({"message": "Username changed successfully"}), 200
+ 
 if __name__ == '__main__':
     app.run(debug=True)
