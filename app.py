@@ -22,6 +22,7 @@ jwt = JWTManager(app)
 
 
 @app.route('/database/test', methods=['GET'])
+@role_requiredV2('User')
 def test_db_connection():
     try:
         result = db.session.execute(text('SELECT 1')).scalar()
