@@ -7,6 +7,7 @@ from Models.RoleDecorator import role_requiredV1, role_requiredV2
 from sqlalchemy import text
 from datetime import timedelta
 import config
+import re
 
 app = Flask(__name__)
 
@@ -35,19 +36,32 @@ def test_db_connection():
 @app.route('/signup', methods=['POST'])
 def signup():
     data = request.get_json()
-    username = data.get('username')
-    email = data.get('email')
-    password = data.get('password')
+    username = str(data.get('username','')).strip()
+    email = str(data.get('email','')).strip()
+    password = str(data.get('password','')).strip()
+    firstName = str(data.get('firstName','')).strip()
+    lastName =  str(data.get('lastName','')).strip()
+
+    if username=='' or email=='' or password=='' or firstName=='' or lastName=='':
+        return jsonify({"message": "Invalid inputs"}), 400
+    
+    email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+
+    if re.match(email_pattern, email) is  None:
+        return jsonify({"message": "Invalid email"}), 400
+    
+    password_pattern = r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+={}\[\]:;"\'<>,.?/-])[A-Za-z\d!@#$%^&*()_+={}\[\]:;"\'<>,.?/-]{8,}$'
+    if re.match(password_pattern, password) is None:
+        return jsonify({"message": "Invalid password"}), 400
+
 
     if Accounts.query.filter((Accounts.username == username) | (Accounts.email == email)).first():
         return jsonify({"message": "User already exists"}), 400
 
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
     new_user = Accounts(username=username, email=email,
-                        password=hashed_password)
-    new_user.role_Id = 1
-    new_user.firstName = 'hi'
-    new_user.lastName = 'test'
+                        password=hashed_password,role_Id=1,firstName=firstName,lastName=lastName)
+  
     db.session.add(new_user)
     db.session.commit()
 
