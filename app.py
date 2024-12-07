@@ -6,11 +6,19 @@ from Models.OrmModels import db, Accounts, Perfumes, Questionnaires, Recommendat
 from Models.RoleDecorator import role_requiredV1, role_requiredV2
 from sqlalchemy import text
 from datetime import timedelta
-import config
+
+
+
+import  config
+
 import re
 from datetime import datetime
-
+from flask_cors import CORS
 app = Flask(__name__)
+
+
+
+CORS(app)  # Enables CORS for all routes and origins
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = config.SQLALCHEMY_DATABASE_URI
