@@ -179,7 +179,7 @@ def change_username():
     return jsonify({"message": "Username changed successfully"}), 200
 
 
-@app.route('/Admin/Questionaire', methods=['POST'])
+@app.route('/Questionaire', methods=['POST'])
 @role_requiredV2('Admin')
 def AddQuestionnaire():
     try:  
@@ -201,7 +201,47 @@ def AddQuestionnaire():
         return jsonify({"message": "Questionnaire added successsfully"}), 201
     except Exception as e:
         return jsonify({"message": "An error occurred", "error": str(e)}), 500
-    
+
+@app.route('/Questionaire/Questions', methods=['POST'])
+@role_requiredV2('Admin')
+def AddQuestions():
+    try:  
+        data = request.get_json()
+        questionnaire_Id = int(data.get('questionnaire_Id',0))
+        questions = data.get('questions',None)
+        
+        if(questionnaire_Id==0):
+            return jsonify({"message": "Questionnaire ID must be specefied"}), 400
+
+        questionnaire = Questionnaires.query.filter_by(questionnaire_Id=questionnaire_Id).first()
+        if(questionnaire == None):
+            return jsonify({"message": "Questionnaire does not exist"}), 404
+        
+        if not isinstance(questions, list) or len(questions)==0 :
+            return jsonify({"message": "Questions must be an array and at least one question should be added"}), 400
+                
+        question_objects = []
+        for question in questions:
+            question_text = question.get('questionText')
+            question_type = question.get('questionType')
+            is_required = question.get('isRequired', True)
+
+            if not question_text or not question_type:
+                return jsonify({"message": "Each question must have text and type"}), 400
+
+            question_obj = Questions(
+                questionnaire_Id=questionnaire_Id,
+                question_Text=question_text,
+                question_Type=question_type,
+                isRequired=is_required
+            )
+            question_objects.append(question_obj)
+        
+        db.session.bulk_save_objects(question_objects)
+        db.session.commit()
+        return jsonify({"message": "Questions added successsfully"}), 201
+    except Exception as e:
+        return jsonify({"message": "An error occurred", "error": str(e)}), 500    
 
 if __name__ == '__main__':
     app.run(debug=True)
