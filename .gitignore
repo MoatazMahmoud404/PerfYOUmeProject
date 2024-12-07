@@ -2,5 +2,9 @@
 /config.py
 __pycache__/
 
-
+ 
 /.vs
+/Bin
+/Database
+Database/PerfYOUmeDatabase.mdf
+Database/PerfYOUmeDatabase_log.ldf
