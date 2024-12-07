@@ -6,7 +6,7 @@ from Models.OrmModels import db, Accounts, Perfumes, Questionnaires, Recommendat
 from Models.RoleDecorator import role_requiredV1, role_requiredV2
 from sqlalchemy import text
 from datetime import timedelta
-from Notes import config
+import config
 import re
 from datetime import datetime
 
