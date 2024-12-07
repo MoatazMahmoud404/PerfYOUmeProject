@@ -179,7 +179,7 @@ def change_username():
     return jsonify({"message": "Username changed successfully"}), 200
 
 
-@app.route('/Questionaire', methods=['POST'])
+@app.route('/questionaire', methods=['POST'])
 @role_requiredV2('Admin')
 def AddQuestionnaire():
     try:  
@@ -202,12 +202,12 @@ def AddQuestionnaire():
     except Exception as e:
         return jsonify({"message": "An error occurred", "error": str(e)}), 500
 
-@app.route('/Questionaire/Questions', methods=['POST'])
+@app.route('/questionaire/<int:questionnaire_Id>/questions', methods=['POST'])
 @role_requiredV2('Admin')
-def AddQuestions():
+def AddQuestions(questionnaire_Id):
     try:  
         data = request.get_json()
-        questionnaire_Id = int(data.get('questionnaire_Id',0))
+        # questionnaire_Id = int(data.get('questionnaire_Id',0))
         questions = data.get('questions',None)
         
         if(questionnaire_Id==0):
@@ -242,6 +242,51 @@ def AddQuestions():
         return jsonify({"message": "Questions added successsfully"}), 201
     except Exception as e:
         return jsonify({"message": "An error occurred", "error": str(e)}), 500    
+
+@app.route('/questionaire', methods=['GET'])
+def GetAvailabeQuestionnaires():
+    try:       
+        take = request.args.get('take',10,type=int)
+        skip = request.args.get('skip',0,type=int)
+        if take<=0 or skip < 0:
+            return jsonify({"message": "Take and skip must be greater than 0"}), 400
+
+        questionnaires = Questionnaires.query.order_by(Questionnaires.questionnaire_Id.asc()).offset(skip).limit(take).all()
+        if len(questionnaires) == 0:
+            jsonify({"message": "No questionnaries found"}), 404
+
+        result = []
+        for q in questionnaires:
+            result.append({
+                'questionnaire_Id': q.questionnaire_Id,
+                'title': q.title,
+                'description': q.description,
+                'createdAt': q.createdAt
+            })
+        return jsonify({"questionnaires": result}), 200       
+    except Exception as e:
+        return jsonify({"message": "An error occurred", "error": str(e)}), 500   
+
+@app.route('/questionaire/<int:questionnaire_Id>/questions', methods=['GET'])
+@jwt_required()
+def getQuestions(questionnaire_Id):
+    try:
+        if(questionnaire_Id<=0):
+            return jsonify({"message": "questionnarie id must be more than 0"}), 400
+        questions = Questions.query.filter_by(questionnaire_Id=questionnaire_Id).all()
+        if len(questions) == 0:
+            return jsonify({"message": "No questions found"}), 404
+        result =[]
+        for q in questions:
+            result.append({
+                'question_Id':q.question_Id,
+                'question_Text':q.question_Text,
+                'question_Type':q.question_Type,
+                'isRequired':q.isRequired
+            })
+        return jsonify({"questions": result}), 200       
+    except Exception as e:
+        return jsonify({"message": "An error occurred", "error": str(e)}), 500   
 
 if __name__ == '__main__':
     app.run(debug=True)
