@@ -1,1 +1,0 @@
-YOU WILL FIND HERE A .Config file Please take it outside of this folder and edit the connection string accrodingly
