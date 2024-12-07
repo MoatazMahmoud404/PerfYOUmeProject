@@ -5,3 +5,4 @@ __pycache__/
 /.vs
 /Bin
 config.py
+/DataBaseV2
