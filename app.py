@@ -126,8 +126,8 @@ def resetpaswword():
         return jsonify({"message": "Invalid user"}), 401
     account = Accounts.query.filter_by(account_Id=id).first()
     data = request.get_json()
-    oldPassword = data.get('oldPassword')
-    newPassword = data.get('newPassword')
+    oldPassword = str(data.get('oldPassword')).strip()
+    newPassword = str(data.get('newPassword')).strip()
 
     if (oldPassword == newPassword):
         return jsonify({"message": "THAT IS THE SAME PASSWORD"}), 400
@@ -178,6 +178,30 @@ def change_username():
     db.session.commit()
     return jsonify({"message": "Username changed successfully"}), 200
 
+
+@app.route('/Admin/Questionaire', methods=['POST'])
+@role_requiredV2('Admin')
+def AddQuestionnaire():
+    try:  
+        data = request.get_json()
+        title = str(data.get('title','')).strip()
+        description = str(data.get('description',None)).strip()
+        current_user = get_jwt_identity()
+        admin_Id = int(current_user['id'])
+        if(title==''):
+            return jsonify({"message": "Ttile must be specefied"}), 400
+        
+        if(description!=None):
+            newQuestionaire = Questionnaires(title=title,description=description,admin_Id=admin_Id)
+        else:
+            newQuestionaire = Questionnaires(title=title,admin_Id=admin_Id)
+               
+        db.session.add(newQuestionaire)
+        db.session.commit()
+        return jsonify({"message": "Questionnaire added successsfully"}), 201
+    except Exception as e:
+        return jsonify({"message": "An error occurred", "error": str(e)}), 500
+    
 
 if __name__ == '__main__':
     app.run(debug=True)
