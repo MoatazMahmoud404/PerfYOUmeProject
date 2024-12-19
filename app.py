@@ -352,5 +352,33 @@ def get_answered_questionnaires():
     
     return jsonify({"questionnaires": questionnaires}), 200    
 
+@app.route('/account/role', methods=['PUT'])
+@role_requiredV2('Admin')
+def change_role_to_admin():
+ 
+    # Parse the email of the user whose role needs to be changed
+    data = request.get_json()
+    user_email = str(data.get('email', '')).strip()
+ 
+    if user_email == '':
+        return jsonify({"message": "Email cannot be empty"}), 400
+ 
+    # Fetch the user account by email
+    user_account = Accounts.query.filter_by(email=user_email).first()
+    if not user_account:
+        return jsonify({"message": "User not found"}), 404
+ 
+    # Fetch the admin role
+    admin_role = Roles.query.filter_by(role_Name='Admin').first()
+    if not admin_role:
+        return jsonify({"message": "Admin role not found in the database"}), 500
+ 
+    # Update the user's role to Admin
+    user_account.role_Id = admin_role.role_Id
+    db.session.commit()
+ 
+    return jsonify({"message": f"Role for user {user_email} has been changed to Admin successfully"}), 200
+
+
 if __name__ == '__main__':
     app.run(debug=True)
