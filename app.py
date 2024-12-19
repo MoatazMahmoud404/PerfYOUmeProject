@@ -443,7 +443,48 @@ def get_perfume(perfume_Id):
 
     except Exception as e:
         return jsonify({"message": "An error occurred", "error": str(e)}), 500
+    
+#Khaled
+@app.route('/addperfume', methods=['POST'])
+@role_requiredV2('Admin')
+def AddPerfume():
+    try:
+        data = request.get_json()
+        perfume_name = str(data.get('perfume_Name', '')).strip()
+        perfume_brand = str(data.get('perfume_Brand', '')).strip()
+        perfume_description = str(data.get('perfume_description', None)).strip() if data.get('perfume_description') else None
+        perfume_rating = data.get('perfume_rating', None)
+        perfume_link = str(data.get('perfume_Link', '')).strip()
+    
+        if not perfume_name:
+            return jsonify({"message": "Perfume name must be specified"}), 400
+        if not perfume_brand:
+            return jsonify({"message": "Perfume brand must be specified"}), 400
+        if not perfume_rating:
+            return jsonify({"message": "Perfume rating must be specified"}), 400
+        
+        existing_perfume = Perfumes.query.filter_by(
+            perfume_Name=perfume_name,
+            perfume_Brand=perfume_brand
+        ).first()
+        
+        if existing_perfume:
+            return jsonify({"message": "Perfume already exists"}), 400
+        
+        new_perfume = Perfumes(
+            perfume_Name=perfume_name,
+            perfume_Brand=perfume_brand,
+            perfume_description=perfume_description,
+            perfume_rating=perfume_rating,
+            perfume_Link=perfume_link
+        )
+        
+        db.session.add(new_perfume)
+        db.session.commit()
+        
+        return jsonify({"message": "Perfume added successfully"}), 201
 
-
+    except Exception as e:
+        return jsonify({"message": "An error occurred", "error": str(e)}), 500
 if __name__ == '__main__':
     app.run(debug=True)
