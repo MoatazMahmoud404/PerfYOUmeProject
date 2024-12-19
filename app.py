@@ -390,7 +390,7 @@ def change_role_to_admin():
     return jsonify({"message": f"Role for user {user_email} has been changed to Admin successfully"}), 200
 
 
-@app.route('/perfumes', methods=['GET'])
+@app.route('/perfume', methods=['GET'])
 def get_perfumes():
     try:
         take = request.args.get('take', 10, type=int)
@@ -422,7 +422,7 @@ def get_perfumes():
         return jsonify({"message": "An error occurred", "error": str(e)}), 500
 
 
-@app.route('/perfumes/<int:perfume_Id>', methods=['GET'])
+@app.route('/perfume/<int:perfume_Id>', methods=['GET'])
 def get_perfume(perfume_Id):
     try:
         perfume = Perfumes.query.filter_by(perfume_Id=perfume_Id).first()
@@ -445,7 +445,7 @@ def get_perfume(perfume_Id):
         return jsonify({"message": "An error occurred", "error": str(e)}), 500
     
 #Khaled
-@app.route('/addperfume', methods=['POST'])
+@app.route('/perfume', methods=['POST'])
 @role_requiredV2('Admin')
 def AddPerfume():
     try:
@@ -486,5 +486,39 @@ def AddPerfume():
 
     except Exception as e:
         return jsonify({"message": "An error occurred", "error": str(e)}), 500
+    
+    
+@app.route('/perfume/<int:perfume_id>', methods=['PUT'])
+@role_requiredV2('Admin')
+def edit_perfume(perfume_id):
+    data = request.json
+    required_fields = ['perfume_Name', 'perfume_Brand', 'perfume_rating' , 'perfume_description', 'perfume_Link']
+    for field in required_fields:
+        if field not in data:
+            return jsonify({"error": f"Missing required field: {field}"}), 400
+
+    # Validate rating is a valid float
+    try:
+        float(data['perfume_rating'])
+    except ValueError:
+        return jsonify({"error": "perfume_rating must be a float"}), 400
+
+        # Fetch the perfume by ID
+    perfume = Perfumes.query.filter_by(perfume_Id=perfume_id).first()
+    if not perfume:
+        return jsonify({"error": "Perfume not found"}), 404
+
+        # Update the perfume information
+    perfume.perfume_Name = data['perfume_Name']
+    perfume.perfume_Brand = data['perfume_Brand']
+    perfume.perfume_rating = data['perfume_rating']
+    perfume.perfume_description = data.get('perfume_description', perfume.perfume_description)
+    perfume.perfume_Link = data.get('perfume_Link', perfume.perfume_Link)
+
+        # Commit the changes to the database
+    db.session.commit()
+
+    return jsonify({"message": "Perfume information updated successfully"}), 200
+
 if __name__ == '__main__':
     app.run(debug=True)
