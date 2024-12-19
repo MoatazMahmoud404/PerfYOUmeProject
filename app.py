@@ -289,7 +289,7 @@ def getQuestions(questionnaire_Id):
         return jsonify({"questions": result}), 200       
     except Exception as e:
         return jsonify({"message": "An error occurred", "error": str(e)}), 500   
-@app.route('/Account/info', methods=['GET'])
+@app.route('/account/info', methods=['GET'])
 @jwt_required()
 def get_account_info():
     try:
@@ -320,6 +320,37 @@ def get_account_info():
         return jsonify({"message": str(e)}), 404
     except Exception as e:
         return jsonify({"message": "An unexpected error occurred", "error": str(e)}), 500
+
+@app.route('/questionnaires/answered')
+@jwt_required()
+def get_answered_questionnaires():
+    current_user = get_jwt_identity()
+    account_id  = current_user['id']
+
+    answered_questionnaires = (
+        db.session.query(Questionnaires)
+        .join(Questions, Questions.questionnaire_Id == Questionnaires.questionnaire_Id)
+        .join(Answers, Answers.question_Id == Questions.question_Id)
+        .filter(Answers.account_Id == account_id)
+        .distinct() 
+        .all()
+    )
+
+    questionnaires = [
+    {
+        'questionnaire_Id': q.questionnaire_Id,
+        'title': q.title,
+        'description': q.description,
+        'createdAt': q.createdAt.strftime('%Y-%m-%d %H:%M:%S') if q.createdAt else None,
+        'isActive':q.isActive
+    }
+    for q in answered_questionnaires
+]
+
+    if len(questionnaires) == 0:
+        return jsonify({"message": "No answered questionnaires found"}), 404
+    
+    return jsonify({"questionnaires": questionnaires}), 200    
 
 if __name__ == '__main__':
     app.run(debug=True)
