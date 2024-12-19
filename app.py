@@ -366,15 +366,12 @@ def view_recommendation(recommendation_Id):
     The response includes recommendation details and associated perfume information.
     """
     try:
-        # Validate the recommendation ID
         if recommendation_Id <= 0:
             return jsonify({"message": "Recommendation ID must be greater than 0"}), 400
 
-        # Get the logged-in user
         current_user = get_jwt_identity()
         account_Id = current_user['id']
 
-        # Fetch the recommendation
         recommendation = Recommendations.query.filter_by(
             recommendation_Id=recommendation_Id,
             account_Id=account_Id  # Ensure the user owns the recommendation
@@ -383,7 +380,6 @@ def view_recommendation(recommendation_Id):
         if not recommendation:
             return jsonify({"message": "Recommendation not found"}), 404
 
-        # Build the response
         response = {
             "recommendation_Id": recommendation.recommendation_Id,
             "recommendation_text": recommendation.recommendation_text,
