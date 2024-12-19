@@ -6,6 +6,8 @@ from Models.OrmModels import db, Accounts, Perfumes, Questionnaires, Recommendat
 from Models.RoleDecorator import role_requiredV1, role_requiredV2
 from sqlalchemy import text
 from datetime import timedelta
+from werkzeug.exceptions import NotFound, Unauthorized
+
 
 
 
@@ -287,6 +289,37 @@ def getQuestions(questionnaire_Id):
         return jsonify({"questions": result}), 200       
     except Exception as e:
         return jsonify({"message": "An error occurred", "error": str(e)}), 500   
+@app.route('/Account/info', methods=['GET'])
+@jwt_required()
+def get_account_info():
+    try:
+        current_user = get_jwt_identity()
+        if not current_user or ("id" not in current_user and "username" not in current_user):
+            raise Unauthorized("Unauthorized or invalid token")
+        account = None
+        if "id" in current_user:
+            account = Accounts.query.filter_by(account_Id=current_user['id']).first()
+        elif "username" in current_user:
+            account = Accounts.query.filter_by(username=current_user['username']).first()
+        if not account:
+            raise NotFound("Account not found")
+        account_info = {
+            "account_Id": account.account_Id,
+            "username": account.username,
+            "email": account.email,
+            "firstName": account.firstName,
+            "lastName": account.lastName,
+            "role_Id": account.role_Id,
+            "createdAt": account.createdAt,
+            "updatedAt": account.updatedAt
+        }
+        return jsonify({"account": account_info}), 200
+    except Unauthorized as e:
+        return jsonify({"message": str(e)}), 401
+    except NotFound as e:
+        return jsonify({"message": str(e)}), 404
+    except Exception as e:
+        return jsonify({"message": "An unexpected error occurred", "error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
