@@ -354,3 +354,50 @@ def get_answered_questionnaires():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+# New BY Ahmed Haytham
+
+
+@app.route('/recommendation/<int:recommendation_Id>', methods=['GET'])
+@jwt_required()
+def view_recommendation(recommendation_Id):
+    """
+    Fetch and return a single recommendation by its ID.
+    The response includes recommendation details and associated perfume information.
+    """
+    try:
+        # Validate the recommendation ID
+        if recommendation_Id <= 0:
+            return jsonify({"message": "Recommendation ID must be greater than 0"}), 400
+
+        # Get the logged-in user
+        current_user = get_jwt_identity()
+        account_Id = current_user['id']
+
+        # Fetch the recommendation
+        recommendation = Recommendations.query.filter_by(
+            recommendation_Id=recommendation_Id,
+            account_Id=account_Id  # Ensure the user owns the recommendation
+        ).first()
+
+        if not recommendation:
+            return jsonify({"message": "Recommendation not found"}), 404
+
+        # Build the response
+        response = {
+            "recommendation_Id": recommendation.recommendation_Id,
+            "recommendation_text": recommendation.recommendation_text,
+            "recommendation_rating": recommendation.recommendation_rating,
+            "createdAt": recommendation.createdAt.strftime("%Y-%m-%d %H:%M:%S"),
+            "perfume": {
+                "perfume_Id": recommendation.recommended_perfume.perfume_Id,
+                "perfume_Name": recommendation.recommended_perfume.perfume_Name,
+                "perfume_Brand": recommendation.recommended_perfume.perfume_Brand,
+                "perfume_description": recommendation.recommended_perfume.perfume_description,
+                "perfume_rating": recommendation.recommended_perfume.perfume_rating,
+                "perfume_Link": recommendation.recommended_perfume.perfume_Link,
+            },
+        }
+        return jsonify(response), 200
+    except Exception as e:
+        return jsonify({"message": "An error occurred", "error": str(e)}), 500
