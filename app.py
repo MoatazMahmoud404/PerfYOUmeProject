@@ -443,8 +443,10 @@ def get_perfume(perfume_Id):
 
     except Exception as e:
         return jsonify({"message": "An error occurred", "error": str(e)}), 500
-    
-#Khaled
+
+# Khaled
+
+
 @app.route('/perfume', methods=['POST'])
 @role_requiredV2('Admin')
 def AddPerfume():
@@ -452,25 +454,26 @@ def AddPerfume():
         data = request.get_json()
         perfume_name = str(data.get('perfume_Name', '')).strip()
         perfume_brand = str(data.get('perfume_Brand', '')).strip()
-        perfume_description = str(data.get('perfume_description', None)).strip() if data.get('perfume_description') else None
+        perfume_description = str(data.get('perfume_description', None)).strip(
+        ) if data.get('perfume_description') else None
         perfume_rating = data.get('perfume_rating', None)
         perfume_link = str(data.get('perfume_Link', '')).strip()
-    
+
         if not perfume_name:
             return jsonify({"message": "Perfume name must be specified"}), 400
         if not perfume_brand:
             return jsonify({"message": "Perfume brand must be specified"}), 400
         if not perfume_rating:
             return jsonify({"message": "Perfume rating must be specified"}), 400
-        
+
         existing_perfume = Perfumes.query.filter_by(
             perfume_Name=perfume_name,
             perfume_Brand=perfume_brand
         ).first()
-        
+
         if existing_perfume:
             return jsonify({"message": "Perfume already exists"}), 400
-        
+
         new_perfume = Perfumes(
             perfume_Name=perfume_name,
             perfume_Brand=perfume_brand,
@@ -478,21 +481,22 @@ def AddPerfume():
             perfume_rating=perfume_rating,
             perfume_Link=perfume_link
         )
-        
+
         db.session.add(new_perfume)
         db.session.commit()
-        
+
         return jsonify({"message": "Perfume added successfully"}), 201
 
     except Exception as e:
         return jsonify({"message": "An error occurred", "error": str(e)}), 500
-    
-    
+
+
 @app.route('/perfume/<int:perfume_id>', methods=['PUT'])
 @role_requiredV2('Admin')
 def edit_perfume(perfume_id):
     data = request.json
-    required_fields = ['perfume_Name', 'perfume_Brand', 'perfume_rating' , 'perfume_description', 'perfume_Link']
+    required_fields = ['perfume_Name', 'perfume_Brand',
+                       'perfume_rating', 'perfume_description', 'perfume_Link']
     for field in required_fields:
         if field not in data:
             return jsonify({"error": f"Missing required field: {field}"}), 400
@@ -512,13 +516,48 @@ def edit_perfume(perfume_id):
     perfume.perfume_Name = data['perfume_Name']
     perfume.perfume_Brand = data['perfume_Brand']
     perfume.perfume_rating = data['perfume_rating']
-    perfume.perfume_description = data.get('perfume_description', perfume.perfume_description)
+    perfume.perfume_description = data.get(
+        'perfume_description', perfume.perfume_description)
     perfume.perfume_Link = data.get('perfume_Link', perfume.perfume_Link)
 
-        # Commit the changes to the database
+    # Commit the changes to the database
     db.session.commit()
 
     return jsonify({"message": "Perfume information updated successfully"}), 200
+
+
+# BY Ahmed Haytham
+
+@app.route('/recommendation/<int:recommendation_Id>', methods=['GET'])
+@jwt_required()
+def get_recommendation(recommendation_Id):
+    try:
+        recommendation = Recommendations.query.filter_by(
+            recommendation_Id=recommendation_Id).first()
+        if not recommendation:
+            return jsonify({"message": "Recommendation not found"}), 404
+
+        # Extract the perfume details from the related perfume object
+        perfume = recommendation.recommended_perfume
+
+        return jsonify({
+            "recommendation_Id": recommendation.recommendation_Id,
+            "account_Id": recommendation.account_Id,
+            "recommendation_rating": recommendation.recommendation_rating,
+            "recommendation_text": recommendation.recommendation_text,
+            "createdAt": recommendation.createdAt,
+            "perfume": {
+                "perfume_Id": perfume.perfume_Id,
+                "perfume_Name": perfume.perfume_Name,
+                "perfume_Brand": perfume.perfume_Brand,
+                "perfume_description": perfume.perfume_description,
+                "perfume_rating": perfume.perfume_rating,
+                "perfume_Link": perfume.perfume_Link
+            }
+        }), 200
+    except Exception as e:
+        return jsonify({"message": "An error occurred", "error": str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)
