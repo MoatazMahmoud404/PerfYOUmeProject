@@ -144,7 +144,7 @@ def resetpaswword():
     return jsonify({"message": "Password updated successfully"}), 200
 
 
-@app.route('/Account/change-username', methods=['PUT'])
+@app.route('/account/username', methods=['PUT'])
 @jwt_required()
 def change_username():
     current_user_id = get_jwt_identity()['id']
