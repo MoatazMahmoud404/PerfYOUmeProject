@@ -10,16 +10,18 @@ We are a team of students studying at Ahram Canadian University in the College o
 
 Here's an overview of our team:  
 
-| Name                       | Student ID | Group |
-| -------------------------- | ---------- | ----- |
-| Moataz Mahmoud Mohamed     | 42210055   | C1    |
-| Mahmoud Naif               | 42210052   | C1    |
-| Khaled Ashraf              | 42210103   | C1    |
-| Abdelrahman Ahmed          | 42210259   | C1    |
-| Adel Adel Ahmed            | 42210211   | C1    |
-| Mohammed Abdulfattah Fathy | 42210180   | C1    |
-| Ahmed Haytham              | 42210126   | C1    |
-| Ahmed Farhat               | 42210249   | C1    |
+| Name                       | Student ID | Group | What the student done                                    |
+| -------------------------- | ---------- | ----- | -------------------------------------------------------- |
+| Moataz Mahmoud Mohamed     | 42210055   | C1    | View perfumes                                            |
+| Mahmoud Naif               | 42210052   | C1    | View questions                                           |
+| Khaled Ashraf              | 42210103   | C1    | Admin panel                                              |
+| Abdelrahman Ahmed          | 42210259   | C1    | Log in and signup                                        |
+| Adel Adel Ahmed            | 42210211   | C1    | Home page and view recommendations                       |
+| Mohammed Abdulfattah Fathy | 42210180   | C1    | Edit username and password                               |
+| Ahmed Haytham              | 42210126   | C1    | View one perfume                                         |
+| Ahmed Farhat               | 42210249   | C1    | Add questions to questionnaire                           |
+| AhmedF                     | 42210249   | C1    | View questionnaires, edit username and password         |
+| Abdo                       | 42210126   | C1    | View questionnaires, home page and view recommendations  |
 
 **Lecturer:**  
 - **Dr. Sherif ElSahfei**  
