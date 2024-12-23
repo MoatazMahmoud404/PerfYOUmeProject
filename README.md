@@ -247,6 +247,32 @@ Authorization: Bearer <JWT>
 
 ---
 
+## **Comparison of `role_requiredV1` and `role_requiredV2`**
+
+1. **`role_requiredV1`**:
+   - **Approach**: 
+     - Retrieves the current user's identity from the JWT (`get_jwt_identity`).
+     - Queries the database (`Accounts` table) to fetch the user's role based on their `account_Id`.
+     - Compares the role from the database with the required role.
+   - **Use Case**: 
+     - Useful when the role in the JWT might not always be trusted or up-to-date, and you want to verify the user's role directly from the database.
+   - **Drawback**: 
+     - Requires a database query for every request, which can introduce latency and increase server load.
+
+2. **`role_requiredV2`**:
+   - **Approach**: 
+     - Retrieves the current user's role directly from the JWT (`get_jwt_identity`).
+     - Compares the role from the JWT with the required role.
+   - **Use Case**: 
+     - Suitable when the JWT is trusted and contains accurate role information.
+     - Eliminates the need for a database query, making it more efficient.
+   - **Drawback**: 
+     - Relies entirely on the JWT payload. If the JWT is compromised or tampered with, the role validation could be bypassed.
+
+## OrmModels.py
+
+- The OrmModels.py file defines the structure of the database using SQLAlchemy's ORM (Object-Relational Mapping) system. It represents different entities in the application as Python classes, each of which corresponds to a table in the database.
+
 ## **Error Codes**
 - **400 Bad Request:** Invalid input or request.
 - **401 Unauthorized:** Authentication failure or missing token.
