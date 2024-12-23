@@ -30,7 +30,7 @@ jwt = JWTManager(app)
 
 
 @app.route('/database/test', methods=['GET'])
-@role_requiredV2('User')
+# @role_requiredV2('User')
 def test_db_connection():
     try:
         result = db.session.execute(text('SELECT 1')).scalar()
@@ -170,8 +170,8 @@ def change_username():
     current_date = datetime.utcnow()
     days_since_registration = (current_date - updatedAt).days
 
-    if days_since_registration < 60:
-        return jsonify({"message": "You must be registered for at least 60 days to change your username"}), 400
+    # if days_since_registration < 60:
+    #     return jsonify({"message": "You must be registered for at least 60 days to change your username"}), 400
     user.username = new_username
     user.updatedAt = current_date
     db.session.commit()
@@ -526,15 +526,47 @@ def edit_perfume(perfume_id):
     return jsonify({"message": "Perfume information updated successfully"}), 200
 
 
+@app.route('/recommendation')
+@jwt_required()
+def getAllRecommendation():
+    try:
+        current_user = get_jwt_identity()
+        account_id = current_user['id']
+        result = Recommendations.query.filter_by(account_Id=account_id).all()
+        
+
+        if(len(result) == 0):
+             return jsonify({"message": "No recommendations"}), 404
+        
+        recommendations=[]
+        for r in result:
+            recommendations.append({
+                'recommendation_Id':r.recommendation_Id,
+                'recommended_perfume_id':r.recommended_perfume_id,
+                'recommendation_rating':r.recommendation_rating,
+                'createdAt':r.createdAt,
+                'recommendation_text':r.recommendation_text
+            })
+            
+
+
+
+        return jsonify({"recommendations": recommendations}), 200
+    except Exception as e:
+        return jsonify({"message": "An error occurred", "error": str(e)}), 500
+    
+
 # BY Ahmed Haytham
 
 @app.route('/recommendation/<int:recommendation_Id>', methods=['GET'])
 @jwt_required()
 def get_recommendation(recommendation_Id):
     try:
+        current_user = get_jwt_identity()
+        account_id = current_user['id']
         recommendation = Recommendations.query.filter_by(
             recommendation_Id=recommendation_Id).first()
-        if not recommendation:
+        if not recommendation or not recommendation.account_Id==account_id:
             return jsonify({"message": "Recommendation not found"}), 404
 
         # Extract the perfume details from the related perfume object
