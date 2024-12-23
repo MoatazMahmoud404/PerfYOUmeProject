@@ -4,6 +4,7 @@ import { apiUrl } from '../../utils'
 import Cookies from 'js-cookie';
 import styles from './recomendation.module.css'
 import { Navbar } from '../../components/Navbar/Navbar';
+import { Link } from 'react-router-dom';
 export const Recomendation = () => {
     const [recomendation,setRecomendation]=useState('')
         const token=Cookies.get('token');
@@ -28,11 +29,13 @@ export const Recomendation = () => {
     <h1 className={styles.heading}>Recomendation</h1>
     <div className={styles.content}>
 
-        {recomendation?.recommendations?.map((item)=>(
-            <div key={item.recommendation_Id} className={styles.card}>
-                <p>{item.createdAt}</p>
-                <p className={styles.p}>{item.recommendation_text}</p>
-            </div>
+        {recomendation?.recommendations?.map((item)=>( 
+            <Link to={`/perfume/${item.recommended_perfume_id}`} key={item.recommendation_Id}>
+              <div key={item.recommendation_Id} className={styles.card}>
+                  <p>{item.createdAt}</p>
+                  <p className={styles.p}>{item.recommendation_text}</p>
+              </div>
+            </Link>
         ))}
     </div>
     </div>
