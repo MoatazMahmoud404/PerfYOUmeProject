@@ -1,7 +1,5 @@
 # Flask Application README
 
-Here’s the updated version with both sections included:  
-
 ---
 
 ## Development Team  
