@@ -1,0 +1,33 @@
+.que{
+    text-align: center;
+
+    
+}
+.txt{
+    padding: 10px 20px;
+    color: white;
+    background-color:#5911f1 ;
+    width: 80%;
+    border-radius: 5px;
+    margin: 10px auto;
+}
+.ans{
+    margin-top: 10px;
+    font-size: 18px;
+    color: white;
+    background-color: blueviolet;
+    width: 80%;
+    border-radius: 5px;
+    margin: 10px auto;
+    padding: 10px 20px;
+    transition: 1s;
+    cursor: pointer;
+}
+.ans:hover{
+    background-color: green;
+}
+.contain{
+    border: #5911f1 solid 2px;
+    margin: 20px auto;
+    width: 60%;
+}

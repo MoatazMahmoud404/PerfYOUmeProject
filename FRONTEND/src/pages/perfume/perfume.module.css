@@ -1,0 +1,164 @@
+/* General styling for the perfume page */
+.perfumePage {
+    background: #39081d;
+    background-size: cover;
+    min-height: 100vh;
+    color: #333;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap:50px;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Content container styling */
+.perfumeContent {
+    max-width: 1200px;
+    width: 100%;
+    padding: 30px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+
+/* Heading styling */
+.perfumeContent h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #9b1f53;
+}
+
+/* Error message styling */
+.errorMessage {
+    color: red;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Perfume grid styling */
+.perfumeGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.perfumeGrid a,.perfumeContent P{
+    color: #9b1f53
+}
+/* Perfume card styling */
+.perfumeCard {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.perfumeCard h2{
+    color: #9b1f53
+}
+
+.perfumeCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+
+
+/* Button styling */
+.perfumeButton {
+    display: inline-block;
+    background-color: #9b1f53;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    margin-top: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.perfumeButton:hover {
+    background-color: #7a173e;
+    transform: scale(1.05);
+}
+/* Brand styling */
+.perfumeBrand {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+/* Rating stars styling */
+.perfumeRating {
+    font-size: 1.2rem;
+    color: #f4c430; /* Golden yellow for stars */
+    margin-top: 5px;
+}
+
+/* Perfume image styling */
+.perfumeImage {
+    width: 100%;
+    height: 200px;
+    object-fit: cover; /* Ensures the image scales without distortion */
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+
+/* Perfume image styling */
+.perfumeImageDETAILS {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    max-height: 300px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Rating stars styling */
+.ratingStarsDETAILS {
+    font-size: 1.5rem;
+    color: #ffbf00; /* Gold color for stars */
+}
+
+/* Perfume page button */
+.perfumeButtonDETAILS {
+    display: inline-block;
+    background-color: #9b1f53;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.perfumeButton:hoverDETAILS {
+    background-color: #7a173e;
+    transform: scale(1.05);
+}
+
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .perfumeContent {
+        padding: 20px;
+    }
+
+    .perfumeGrid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+}

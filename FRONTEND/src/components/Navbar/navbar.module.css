@@ -1,0 +1,38 @@
+.contenair{
+    display: flex;
+    width: 80%;
+    margin: 0 auto;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: #9b1f53 solid 3px;
+}
+
+.contenair .links{
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    list-style: none;
+}
+.contenair .links li{
+    font-size: 18px;
+    font-weight:bold ;
+    text-decoration: none;
+    
+
+}
+.menue{
+    font-size: 35px;
+    cursor: pointer;
+}
+@media (max-width: 1008px) {
+    .links{
+        display: none !important;;
+    }
+    
+}
+@media (min-width:1008px){
+    .menue{
+        display: none;
+    }
+}

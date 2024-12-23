@@ -1,0 +1,37 @@
+.all{
+    width: 100%;
+    height: 100%;
+}
+
+.content{
+    display: flex;
+    color: white;
+    justify-content: center;
+    gap: 30px;
+    align-items: center;
+    padding: 30px;
+    flex-wrap: wrap;
+}
+.card{
+    border: 1px solid #9b1f53;
+    padding: 20px;
+    max-width: 200px;
+    min-height:200px;
+    border-radius: 5px;
+    box-shadow: -6px 3px 3px 0px #9b1f53;
+    transition: 2s;
+}
+.card .p{
+    margin-bottom: 10px;
+    text-align: center;
+    display: block;
+    word-wrap: break-word;  
+   
+}
+.heading{
+    color: white;
+    text-align: center;
+}
+.card:hover{
+    transform: scale(1.2);
+}

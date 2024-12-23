@@ -1,0 +1,38 @@
+
+
+
+
+.Questioner{
+    padding: 30px;
+    text-align: center'';
+    color: white;
+
+    height: 100%;
+}
+.head{
+    font-size: 50px;
+    font-weight: bold;
+    text-align: center;
+}
+.content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.question{
+    padding: 10px;
+    border: solid 1px #9b1f53;
+    text-align: center;
+}
+.question button{
+    margin: 0 auto;
+    display: block;
+    padding: 5px 10px;
+    background-color: #9b1f53;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+}
