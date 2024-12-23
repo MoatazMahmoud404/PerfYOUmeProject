@@ -60,6 +60,54 @@ This is a Flask-based web application that provides functionality for user authe
 - **CORS Handling:** Flask-CORS
 - **Database:** Configurable via environment variables
 
+
+## Setup Instructions
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/MoatazMahmoud404/PerfYOUmeProject.git
+cd PerfYoume
+```
+
+### 2. Install Dependencies
+
+Ensure you have `pip` installed, then install the required Python dependencies:
+
+```bash
+pip install -r req.txt
+```
+
+### 3. Set Environment Variables
+
+Create a `.env` file in the root directory and configure your environment variables for the Flask app. Example:
+
+```env
+FLASK_APP=app.py
+FLASK_ENV=development
+DATABASE_URL=your-database-url
+SECRET_KEY=your-secret-key
+JWT_SECRET_KEY=your-jwt-secret-key
+```
+
+### 4. Database Setup
+
+Ensure you have a database set up and accessible via the `DATABASE_URL` environment variable. Run the following command to initialize the database:
+
+```bash
+flask db upgrade
+```
+
+### 5. Running the Application
+
+Start the Flask development server:
+
+```bash
+flask run
+```
+
+By default, the app will be available at `http://127.0.0.1:5000/`.
+
 ## **Endpoints**
 
 ### **1. Database Connection Test**
