@@ -4,10 +4,10 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from Models.OrmModels import db, Accounts, Perfumes, Questionnaires, Recommendations, Questions, Answers, Roles
 from Models.RoleDecorator import role_requiredV1, role_requiredV2
-from sqlalchemy import text
+from sqlalchemy import func, text
 from datetime import timedelta
 from werkzeug.exceptions import NotFound, Unauthorized
-
+import random
 
 import config
 
@@ -587,6 +587,50 @@ def get_recommendation(recommendation_Id):
                 "perfume_Link": perfume.perfume_Link
             }
         }), 200
+    except Exception as e:
+        return jsonify({"message": "An error occurred", "error": str(e)}), 500
+
+@app.route('/Recommendation', methods=['POST'])
+@jwt_required()
+def AddRecommendation():
+    try:
+        current_user = get_jwt_identity()
+        account_id = current_user['id']
+        data = request.get_json()
+        print(data)
+        answers = data.get('answers', None)
+
+        if not isinstance(answers, dict) or len(answers) == 0:
+            return jsonify({"message": "Answers must be an object with at least one question."}), 400
+        
+        random_perfume = Perfumes.query.order_by(func.NEWID()).first()
+        if not random_perfume:
+            return jsonify({"message": "No perfumes found in the database!"}), 404
+
+        BASMAGA = [
+            "This perfume is as unique as you are!",
+            "A scent that perfectly matches your vibe!",
+            "A fragrance to make your day extra special!",
+            "This is the perfect scent for your style!",
+            "A timeless perfume for a timeless personality!"
+        ]
+
+        random_message = random.choice(BASMAGA)
+
+        random_rating = round(random.uniform(1, 5), 1)
+
+
+        recommendation = Recommendations(
+            account_Id =account_id,
+            recommended_perfume_id=random_perfume.perfume_Id,
+            recommendation_rating=random_rating,
+            recommendation_text=random_message
+        )
+
+        db.session.add(recommendation)
+        db.session.commit()
+       
+        return jsonify({"message": "Recommendation Generated successsfully"}), 201
     except Exception as e:
         return jsonify({"message": "An error occurred", "error": str(e)}), 500
 
