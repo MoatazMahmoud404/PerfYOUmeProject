@@ -68,7 +68,7 @@ try{
         <button type='submit' className={style.btn1}>Login</button>
         
       </form>
-      <Link className={style.link} to='/regester'>Regester</Link>
+      <Link className={style.link} to='/regester'>Register</Link>
       </div>
     </div>
     </div>

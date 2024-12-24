@@ -1,33 +1,67 @@
-.que{
-    text-align: center;
 
-    
+.que {
+    text-align: center;
+    padding: 20px;
 }
-.txt{
-    padding: 10px 20px;
-    color: white;
-    background-color:#5911f1 ;
-    width: 80%;
-    border-radius: 5px;
-    margin: 10px auto;
+
+.txt {
+    padding: 20px 30px;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    margin: 15px auto;
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
 }
-.ans{
-    margin-top: 10px;
-    font-size: 18px;
-    color: white;
-    background-color: blueviolet;
-    width: 80%;
-    border-radius: 5px;
+
+.ans {
+    font-size: 1rem;
     margin: 10px auto;
-    padding: 10px 20px;
-    transition: 1s;
+    background: #6c0dd3;
+    color: #fff;
+    width: 70%;
+    border-radius: 5px;
+    padding: 12px 20px;
     cursor: pointer;
+    text-transform: uppercase;
+    box-shadow: 0px 4px 10px rgba(108, 13, 211, 0.6);
+    transition: all 0.3s ease-in-out;
 }
-.ans:hover{
-    background-color: green;
+.selected {
+    border-color: #d0a8ff; 
+  background-color: #d0a8ff; 
+  color: #2a0140; 
+  }
+
+.ans:hover {
+    background: #980eff;
+    transform: translateY(-3px);
+    box-shadow: 0px 6px 12px rgba(152, 14, 255, 0.8);
 }
-.contain{
-    border: #5911f1 solid 2px;
+
+.contain {
+    border: 2px solid rgba(108, 13, 211, 0.8);
     margin: 20px auto;
     width: 60%;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 
 }
+
+.submitButton {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #6a0dad;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+
+  .submitButton:hover {
+    background-color: #5a00c5;
+  }
