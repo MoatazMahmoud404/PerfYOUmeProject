@@ -10,11 +10,11 @@ const Mobilenav = ({setOpen}) => {
         <GoXCircleFill onClick={()=>setOpen(false)}/>
         </div>
           <ul className={styles.links}>
-          <li><Link to='/Home'>Home</Link></li>
-          <li><Link to='/AccountInfo'>AccountInfo</Link></li>
-          <li><Link to='/Recomndation'>Recomndation</Link></li>
-          <li><Link to='/perfume'>perfumes</Link></li>
-          <li><Link to='/questioner'>questioner</Link></li>
+         <li><Link to='/Home'>Home</Link></li>
+          <li><Link to='/AccountInfo'>Account</Link></li>
+          <li><Link to='/Recomndation'>Recommendation</Link></li>
+          <li><Link to='/questioner'>Questionnaire</Link></li>
+          <li><Link to='/perfume'>Perfumes</Link></li>
           <li>< Link to='/'>Log Out</Link></li>
         </ul>
     </div>
