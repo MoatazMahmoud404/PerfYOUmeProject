@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams , useNavigate }  from "react-router-dom";
 import Cookies from "js-cookie";
 import { Navbar } from "../../components/Navbar/Navbar";
 import style from "./questioner.module.css";
@@ -12,7 +12,7 @@ const QuestionerDetails = () => {
   const [answers, setAnswers] = useState({});
   const { id } = useParams();
   const token = Cookies.get("token");
-
+  const navigation=useNavigate();
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -57,14 +57,17 @@ const QuestionerDetails = () => {
     if (validateAnswers()) {
       axios
         .post(
-          `${apiUrl}/questionaire/${id}/submit`,
-          { answers },
+          `${apiUrl}/Recommendation`,
+          { answers:answers },
           config
         )
-        .then((res) => Swal.fire({
+        .then((res) => {Swal.fire({
           icon: "success",
           title: res.data.message,
-        }))
+        })
+        navigation('/Recomndation')
+      
+        })
         .catch((err) =>   Swal.fire({
           icon: "error",
           title: "Oops...",
